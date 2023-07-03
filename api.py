@@ -208,45 +208,6 @@ plt.show()
 
 
 
-
-
-
-@app.route('/')
-def hello():
-    return 'Welcome to the Solar Energy Forecasting API!'
-
-
-@app.route('/prediction/hourly')
-def get_hourly_prediction():
-    start_time = ''
-    end_time = ''
-    with open('21_01_2019.csv', 'r') as f:
-        reader = csv.reader(f, delimiter=';')
-        next(reader)
-        for row in reader:
-            date = row[0]
-            time = row[1]
-            amount = int(row[3])
-            if amount > 20:
-                if not start_time:
-                    start_time = time
-                    end_time = time
-                else:
-                    end_time = time
-            elif start_time:
-                break
-
-    prediction_result = {
-        'start_time': start_time,
-        'end_time': end_time,
-        'prediction': 'Hourly prediction result is here'
-    }
-
-    return jsonify(prediction_result)
-
-
-
-
 @app.route('/prediction/monthly')
 def get_monthly_prediction():
     # Perform monthly prediction using your trained model
@@ -260,8 +221,8 @@ def get_monthly_prediction():
 
     response = {
         'prediction': 'Monthly prediction result',
-        'high_production_days -': high_production_days,
-        'low_production_days - ': low_production_days
+        'high_production_days': high_production_days,
+        'low_production_days': low_production_days
     }
 
     return jsonify(response)
