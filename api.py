@@ -260,8 +260,8 @@ def get_monthly_prediction():
 
     response = {
         'prediction': 'Monthly prediction result',
-        'high_production_days': high_production_days,
-        'low_production_days': low_production_days
+        'high_production_days -': high_production_days,
+        'low_production_days - ': low_production_days
     }
 
     return jsonify(response)
