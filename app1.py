@@ -3,6 +3,7 @@ import numpy as np
 import pandas as pd
 import tensorflow as tf
 from pylab import rcParams
+import seaborn as sns
 import matplotlib.pyplot as plt
 from keras.models import Sequential
 from keras.layers import Dense, Dropout, GRU
@@ -66,17 +67,24 @@ def split2(df, look_back=7):
     return np.array(dataX), np.array(dataY)
 
 
+
 def Xplot(hist):
     if 'loss' in hist.history and 'val_loss' in hist.history:
-        plt.plot(hist.history['loss'])
-        plt.plot(hist.history['val_loss'])
-        plt.title('Model loss')
-        plt.ylabel('Loss')
+        epochs = range(1, len(hist.history['loss']) + 1)
+        train_loss = hist.history['loss']
+        val_loss = hist.history['val_loss']
+        
+        plt.plot(epochs, train_loss, 'b', label='Train Loss')
+        plt.plot(epochs, val_loss, 'r', label='Validation Loss')
+        plt.title('Model Loss')
         plt.xlabel('Epoch')
-        plt.legend(['Train', 'Validation'], loc='upper right')
+        plt.ylabel('Loss')
+        plt.legend()
         plt.show()
     else:
         print("Missing loss values in history dictionary.")
+
+
 
 
 def visualiser(df):
