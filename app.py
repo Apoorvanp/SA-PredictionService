@@ -145,6 +145,8 @@ Data0 = visualiser(Data0)
 scaler = MinMaxScaler(feature_range=(0, 1))
 Data0 = scaler.fit_transform(Data0)
 
+#separation of train and test data
+
 train, test = split1(Data0)
 
 trainX, trainY = split2(train)
@@ -166,8 +168,10 @@ model.add(Dense(1, activation='sigmoid'))
 model.compile(optimizer=ops.Nadam(lr=1e-3), loss='mse')
 
 model.summary()
+console.log("Training the model...")
 history = model.fit(trainX, trainY, validation_split=0.2,
-                    epochs=100, batch_size=8, verbose=1)
+                    epochs=5, batch_size=8, verbose=1)
+console.log("Training completed.")
 
 Xplot(history)
 
