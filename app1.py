@@ -245,8 +245,6 @@ plt.savefig('prediction_plot.png')  # Save the plot as an image file
 # Flask routes
 @app.route('/prediction/monthly1')
 def get_monthly_prediction():
-    # Perform monthly prediction using your trained model
-    # Assuming you have already performed the prediction and stored the result in the variable `trainPredict`
 
     column_names = ['MW Total']
     df = pd.DataFrame(trainPredict, columns=column_names)
@@ -255,7 +253,6 @@ def get_monthly_prediction():
     low_production_days = df.nsmallest(5, 'MW Total')['MW Total'].index.tolist()
 
     response = {
-        'prediction': 'Monthly prediction result',
         'high_production_days': high_production_days,
         'low_production_days': low_production_days
     }
