@@ -70,19 +70,20 @@ def split2(df, look_back=7):
 
 def Xplot(hist):
     if 'loss' in hist.history and 'val_loss' in hist.history:
-        epochs = range(1, len(hist.history['loss']) + 1)
         train_loss = hist.history['loss']
         val_loss = hist.history['val_loss']
-        
-        plt.plot(epochs, train_loss, 'b', label='Train Loss')
-        plt.plot(epochs, val_loss, 'r', label='Validation Loss')
-        plt.title('Model Loss')
-        plt.xlabel('Epoch')
-        plt.ylabel('Loss')
-        plt.legend()
-        plt.show()
+
+        print("Train Loss:")
+        for epoch, loss in enumerate(train_loss, start=1):
+            print(f"Epoch {epoch}: {loss:.2f}")
+
+        print("Validation Loss:")
+        for epoch, loss in enumerate(val_loss, start=1):
+            print(f"Epoch {epoch}: {loss:.2f}")
     else:
         print("Missing loss values in history dictionary.")
+
+
 
 
 
@@ -236,7 +237,8 @@ print("Plotting baseline and predictions...")
 plt.plot(scaler.inverse_transform(Data0), color='y')
 plt.plot(trainPredictPlot, color='b')
 plt.plot(testPredictPlot, color='r')
-plt.show()
+plt.savefig('prediction_plot.png')  # Save the plot as an image file
+
 
 
 
