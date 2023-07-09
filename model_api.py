@@ -10,6 +10,7 @@ from keras.layers import Dense, Dropout, GRU
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.metrics import mean_squared_error
 from flask import Flask, jsonify
+import retrieve_train_predict
 
 app = Flask(__name__)
 
@@ -239,25 +240,9 @@ plt.plot(trainPredictPlot, color='b')
 plt.plot(testPredictPlot, color='r')
 plt.savefig('prediction_plot.png')  # Save the plot as an image file
 
+print('Saving the model...')
+# Save the model
+model.save('trained_model.h5')
+# Save trainPredict to a shared location
+retrieve_train_predict.save_train_predict(trainPredict)
 
-
-
-# Flask routes
-@app.route('/prediction/monthly')
-def get_monthly_prediction():
-
-    column_names = ['MW Total']
-    df = pd.DataFrame(trainPredict, columns=column_names)
-
-    high_production_days = df.nlargest(5, 'MW Total')['MW Total'].index.tolist()
-    low_production_days = df.nsmallest(5, 'MW Total')['MW Total'].index.tolist()
-
-    response = {
-        'high_production_days': high_production_days,
-        'low_production_days': low_production_days
-    }
-
-    return jsonify(response)
-
-if __name__ == '__main__':
-    app.run()
