@@ -18,26 +18,24 @@ def get_monthly_prediction():
     if trainPredict is None:
         return jsonify({'error': 'Failed to retrieve trainPredict from shared location'})
 
-    # Process the trainPredict variable and generate the desired response
-    column_names = ['MW Total']
-    df = pd.DataFrame(trainPredict, columns=column_names)
-    high_production_days = df.nlargest(5, 'MW Total')['MW Total'].index.tolist()
-    low_production_days = df.nsmallest(5, 'MW Total')['MW Total'].index.tolist()
-
     # Make predictions using the loaded model
     trainX = np.load('trainX.npy')
     testX = np.load('testX.npy')
     trainPredict = model.predict(trainX)
     testPredict = model.predict(testX)
 
+    # Process the trainPredict variable and generate the desired response
+    df = pd.DataFrame(trainPredict[:30])
+
+    high_production_days = df.nlargest(5, 0).index.tolist()
+    low_production_days = df.nsmallest(5, 0).index.tolist()
+
     response = {
         'high_production_days': high_production_days,
-        'low_production_days': low_production_days,
-        'train_predictions': trainPredict.tolist(),
-        'test_predictions': testPredict.tolist()
+        'low_production_days': low_production_days
     }
 
     return jsonify(response)
 
 if __name__ == '__main__':
-    app.run(port=7000)
+    app.run(port=6000)

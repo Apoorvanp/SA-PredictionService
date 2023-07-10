@@ -140,6 +140,7 @@ print("Data preprocessing completed.")
 print("Concatenating the Data variables into a single DataFrame...")
 Data = pd.concat([Data1, Data2, Data3, Data4, Data5, Data6,
                  Data7, Data8, Data9, Data10], ignore_index=True)
+Data.head()
 print("Data concatenation completed.")
 
 print("Visualizing the Data...")
@@ -193,8 +194,10 @@ print("Model training completed.")
 
 print("Performing predictions...")
 
+look_back = 7
+
 # Perform predictions
-trainPredict= model.predict(trainX)
+trainPredict = model.predict(trainX)
 testPredict = model.predict(testX)
 
 # Inverse scale the predictions
@@ -221,12 +224,13 @@ print('Test Score: %.2f RMSE' % (testScore))
 print("Shifting train predictions for plotting...")
 trainPredictPlot = np.empty_like(Data0)
 trainPredictPlot[:, :] = np.nan
-trainPredictPlot[7:len(trainPredict)+7, :] = trainPredict
+trainPredictPlot[look_back:len(trainPredict)+look_back, :] = trainPredict
 
 print("Shifting test predictions for plotting...")
 testPredictPlot = np.empty_like(Data0)
 testPredictPlot[:, :] = np.nan
-testPredictPlot[len(trainPredict)+(7*2)+1:len(Data0)-1, :] = testPredict
+testPredictPlot[len(trainPredict)+(look_back*2)+1:len(Data0)-1, :] = testPredict
+
 
 print('Train predictions:')
 print(trainPredictPlot)
@@ -239,6 +243,12 @@ plt.plot(scaler.inverse_transform(Data0), color='y')
 plt.plot(trainPredictPlot, color='b')
 plt.plot(testPredictPlot, color='r')
 plt.savefig('prediction_plot.png')  # Save the plot as an image file
+print("Plotting completed.")
+
+
+column_names = ['MW Total']
+df = pd.DataFrame(trainPredict, columns=column_names)
+print(df)
 
 print('Saving the model...')
 # Save the model
@@ -246,3 +256,7 @@ model.save('trained_model.h5')
 # Save trainPredict to a shared location
 retrieve_train_predict.save_train_predict(trainPredict)
 
+np.save('trainX.npy', trainX)
+np.save('testX.npy', testX)
+
+print('Saving completed.')
