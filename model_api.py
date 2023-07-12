@@ -12,6 +12,7 @@ from sklearn.metrics import mean_squared_error
 from flask import Flask, jsonify
 import retrieve_train_predict
 
+app = Flask(__name__)
 
 def fixData(df):
     df = df.drop(df.index[[0, 1, 2]])
@@ -53,10 +54,9 @@ def fixData(df):
 
 def split1(df, train_size=0.75):
     split_index = int(len(df) * train_size)
-    train = df[:split_index]
-    test = df[split_index:]
+    train = df.iloc[:split_index]
+    test = df.iloc[split_index:]
     return train, test
-
 
 def split2(df, look_back=7):
     dataX, dataY = [], []
@@ -65,6 +65,7 @@ def split2(df, look_back=7):
         dataX.append(a)
         dataY.append(df.iloc[i + look_back, 0])
     return np.array(dataX), np.array(dataY)
+
 
 
 
@@ -82,6 +83,10 @@ def Xplot(hist):
             print(f"Epoch {epoch}: {loss:.2f}")
     else:
         print("Missing loss values in history dictionary.")
+
+
+
+
 
 
 def visualiser(df):
@@ -159,6 +164,8 @@ trainX = trainX.reshape(trainX.shape[0], trainX.shape[1], 1)
 testX = testX.reshape(testX.shape[0], testX.shape[1], 1)
 print("Reshaping completed.")
 
+
+# Build and train the model
 print("Starting model training...")
 model = Sequential()
 model.add(GRU(units=8, input_shape=(trainX.shape[1], 1), return_sequences=True))
@@ -174,9 +181,8 @@ model.compile(optimizer='nadam', loss='mse')
 model.summary()
 
 print("Training the model...")
-epochs = 100
-batch_size = 8
-history = model.fit(trainX, trainY, validation_split=0.2, epochs=epochs, batch_size=batch_size, verbose=1, shuffle=True)
+history = model.fit(trainX, trainY, validation_split=0.2,
+                    epochs=5, batch_size=8, verbose=1)
 print("Training completed.")
 
 print(history.history)
