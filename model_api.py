@@ -12,7 +12,6 @@ from sklearn.metrics import mean_squared_error
 from flask import Flask, jsonify
 import retrieve_train_predict
 
-app = Flask(__name__)
 
 def fixData(df):
     df = df.drop(df.index[[0, 1, 2]])
@@ -83,10 +82,6 @@ def Xplot(hist):
             print(f"Epoch {epoch}: {loss:.2f}")
     else:
         print("Missing loss values in history dictionary.")
-
-
-
-
 
 
 def visualiser(df):
@@ -164,8 +159,6 @@ trainX = trainX.reshape(trainX.shape[0], trainX.shape[1], 1)
 testX = testX.reshape(testX.shape[0], testX.shape[1], 1)
 print("Reshaping completed.")
 
-
-# Build and train the model
 print("Starting model training...")
 model = Sequential()
 model.add(GRU(units=8, input_shape=(trainX.shape[1], 1), return_sequences=True))
@@ -181,8 +174,9 @@ model.compile(optimizer='nadam', loss='mse')
 model.summary()
 
 print("Training the model...")
-history = model.fit(trainX, trainY, validation_split=0.2,
-                    epochs=100, batch_size=8, verbose=1)
+epochs = 100
+batch_size = 8
+history = model.fit(trainX, trainY, validation_split=0.2, epochs=epochs, batch_size=batch_size, verbose=1, shuffle=True)
 print("Training completed.")
 
 print(history.history)
