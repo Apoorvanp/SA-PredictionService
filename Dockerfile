@@ -6,15 +6,15 @@ WORKDIR /app
 
 # Copy the requirements.txt file and install dependencies
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
-RUN pip install pylab
+RUN pip3 install --no-cache-dir -r requirements.txt
+RUN pip3 install matplotlib
 
 
 # Copy the API code into the container
 COPY . .
 
 # Expose the port your API will listen on
-EXPOSE 5000
+EXPOSE 3000
 
 # Set the command to run your API
-CMD ["python", "app.py"]
+CMD ["python3", "monthly_prediction.py"]
